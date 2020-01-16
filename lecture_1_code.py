@@ -16,20 +16,24 @@ def clean_text(filename):
     print('Post-processing character count: ' + str('{:,}'.format(len(cleaned_text))))
     print('')
 
-def print_cypher(key, charcount):
-    print('Original string:  ' + str(cleaned_text[0:charcount]))
-    print('Encrypted string: ' + str(Caesar(key = key).encipher(cleaned_text)[0:charcount]))
-    print('Decrypted string: ' + str(Caesar(key = key).decipher(Caesar(key = key).encipher(cleaned_text))[0:charcount]))
+def print_shift_cipher(key):
+    global encrypted_string
+    print('Original string:  ' + str(cleaned_text[0:75]))
+    encrypted_string = Caesar(key = key).encipher(cleaned_text)
+    print('Encrypted string: ' + str(encrypted_string[0:75]))
+    print('Decrypted string: ' + str(Caesar(key = key).decipher(Caesar(key = key).encipher(cleaned_text))[0:75]).lower())
     print('')
+    show_histogram()
 
 def show_histogram():
-    plt.hist([ord(x) - 97 for x in cleaned_text], bins = range(27))
+    plt.hist([ord(x) - 97 for x in cleaned_text], bins = range(27), label = 'plaintext')
+    plt.hist([ord(x) - 97 for x in encrypted_string.lower()], bins = range(27), label = 'ciphertext')
     plt.title('Histogram of letter distribution')
     plt.xlabel('letter')
+    plt.legend(loc='upper right')
     plt.xticks(list(np.arange(0,26,1)),[x for x in string.ascii_lowercase])
     plt.ylabel('frequency')
     plt.show()
 
 clean_text('darwin.txt')
-print_cypher(23,75)
-show_histogram()
+print_shift_cipher(23)
