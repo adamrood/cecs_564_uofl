@@ -73,22 +73,18 @@ def create_table(n):
     for x in range(1,n):
         for group in sum_to_n(n, x):
             groups.append(group)
-    print(groups)
+    #removing 1 values for simplicity
     groups_reduced = [[ele for ele in sub if ele != 1] for sub in groups]
     for a in range(1, len(groups_reduced)):
-        if len(groups_reduced[a]) == len(set(groups_reduced[a])):
-            first_stop = []
-            n2 = n
-            for y in range(len(groups_reduced[a])):
-                work = []
-                for q in range(groups_reduced[a][y]):
-                    work.append(n2)
-                    n2 -= 1
-                first_stop.append(np.product(work)/len(work))
-            values.append(np.product(first_stop))
-            orders.append(reduce(lambda x,y: x*y // math.gcd(x,y), groups_reduced[a]))
+        first_stop = []
+        n2 = n
+        for y in range(len(groups_reduced[a])):
+            work = []
+            for q in range(groups_reduced[a][y]):
+                work.append(n2)
+                n2 -= 1
+            first_stop.append(np.product(work)/len(work))
         if len(groups_reduced[a]) != len(set(groups_reduced[a])):
-            first_stop = []
             mult_list = []
             multipliers = []
             for x in Counter(groups_reduced[a]).items():
@@ -96,15 +92,10 @@ def create_table(n):
                     multipliers.append(x[1])
             for x in multipliers:
                 mult_list.append(1/math.factorial(x))
-            n2 = n
-            for y in range(len(groups_reduced[a])):
-                work = []
-                for q in range(groups_reduced[a][y]):
-                    work.append(n2)
-                    n2 -= 1
-                first_stop.append(np.product(work)/len(work))
             values.append(np.product(first_stop)*np.product(mult_list))
-            orders.append(reduce(lambda x,y: x*y // math.gcd(x,y), groups_reduced[a]))
+        else:
+            values.append(np.product(first_stop))
+        orders.append(reduce(lambda x,y: x*y // math.gcd(x,y), groups_reduced[a]))
     if np.sum(values) == math.factorial(n):
         return pd.DataFrame(list(zip(groups,values,orders)), columns = ['Structure','Count','Order'])
     else:
