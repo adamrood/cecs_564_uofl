@@ -1,6 +1,8 @@
 import numpy as np
 import math
 from functools import reduce
+from collections import Counter
+import pandas as pd
 
 def cycles(n):
     x = np.random.permutation(n) + 1
@@ -39,8 +41,75 @@ def cycles(n):
     print('Cycles:')
     for x in range(len(cycles)):
         print(cycles[x])
-    lcm = reduce(lambda x,y: x*y // gcd(x,y), counts)
+    lcm = reduce(lambda x,y: x*y // math.gcd(x,y), counts)
     print('')
     print('This is of order:', lcm)
 
-cycles(3)
+cycles(5)
+cycles(7)
+cycles(41)
+
+##Code to create table of Group/Permutation Count/Order.
+##Code functions well for small n size (<= 12)
+
+##function to find all unique summations of a given number
+def sum_to_n(n, size, limit=None):
+    if size == 1:
+        yield [n]
+        return
+    if limit is None:
+        limit = n
+    start = (n + size - 1) // size
+    stop = min(limit, n - size + 1) + 1
+    for i in range(start, stop):
+        for tail in sum_to_n(n - i, size - 1, i):
+            yield [i] + tail
+
+##create list of groups
+def create_table(n):
+    groups = ['e']
+    values = [1]
+    orders = [1]
+    for x in range(1,n):
+        for group in sum_to_n(n, x):
+            groups.append(group)
+    print(groups)
+    groups_reduced = [[ele for ele in sub if ele != 1] for sub in groups]
+    for a in range(1, len(groups_reduced)):
+        if len(groups_reduced[a]) == len(set(groups_reduced[a])):
+            first_stop = []
+            n2 = n
+            for y in range(len(groups_reduced[a])):
+                work = []
+                for q in range(groups_reduced[a][y]):
+                    work.append(n2)
+                    n2 -= 1
+                first_stop.append(np.product(work)/len(work))
+            values.append(np.product(first_stop))
+            orders.append(reduce(lambda x,y: x*y // math.gcd(x,y), groups_reduced[a]))
+        if len(groups_reduced[a]) != len(set(groups_reduced[a])):
+            first_stop = []
+            mult_list = []
+            multipliers = []
+            for x in Counter(groups_reduced[a]).items():
+                if x[1] != 1:
+                    multipliers.append(x[1])
+            for x in multipliers:
+                mult_list.append(1/math.factorial(x))
+            n2 = n
+            for y in range(len(groups_reduced[a])):
+                work = []
+                for q in range(groups_reduced[a][y]):
+                    work.append(n2)
+                    n2 -= 1
+                first_stop.append(np.product(work)/len(work))
+            values.append(np.product(first_stop)*np.product(mult_list))
+            orders.append(reduce(lambda x,y: x*y // math.gcd(x,y), groups_reduced[a]))
+    if np.sum(values) == math.factorial(n):
+        return pd.DataFrame(list(zip(groups,values,orders)), columns = ['Structure','Count','Order'])
+    else:
+        return 'An error occured.  You likely entered a value that is too big to compute.'
+
+create_table(5) #class example
+create_table(7) #homework assignment
+create_table(12) #stress test
