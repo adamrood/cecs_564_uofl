@@ -14,7 +14,7 @@ def Bayes(p, pk, e):
     for i in range(m):
         for j in range(n):
             q[e[i][j] - 1] = q[e[i][j] - 1] + pk[i] * p[j]
-            pcgivenp[e[i][j] - 1][j] = pcgivenp[e[i][j] - 1][j] + pk[i];
+            pcgivenp[e[i][j] - 1][j] = pcgivenp[e[i][j] - 1][j] + pk[i]
     for i in range(n):
         for j in range(n):
             ppgivenc[i][j] = pcgivenp[j][i] * p[i]/q[j]
