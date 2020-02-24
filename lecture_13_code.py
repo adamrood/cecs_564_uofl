@@ -11,7 +11,6 @@ def Bayes(p, pk, e):
     q = np.zeros(n)
     pcgivenp = np.zeros((n,n))
     ppgivenc = np.zeros((n,n))
-    print(ppgivenc)
     for i in range(m):
         for j in range(n):
             q[e[i][j] - 1] = q[e[i][j] - 1] + pk[i] * p[j]
