@@ -20,4 +20,8 @@ def Bayes(p, pk, e):
             ppgivenc[i][j] = pcgivenp[j][i] * p[i]/q[j]
     return q, ppgivenc
 
-Bayes(p,pk,e)
+q, pgc = Bayes(p,pk,e)
+
+print('q =', q)
+print('')
+print(pgc)
