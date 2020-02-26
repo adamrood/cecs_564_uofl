@@ -18,6 +18,12 @@ def LFSR(seed,c):
     byt = int(bt,2)
     return byt, seed
 
+def histogram(ds):
+    plt.plot(ds)
+    plt.show()
+    plt.plot(ds[0:60])
+    plt.show()
+
 byt, seed = LFSR([0,0,0,1],[4,1])
 print(byt)
 print(seed)
@@ -29,10 +35,7 @@ for i in range(1000):
     k_list.append(k)
     s = b
 
-plt.plot(k_list)
-plt.show()
-plt.plot(k_list[0:60])
-plt.show()
+histogram(k_list)
 
 s = [0,0,1,1,0,0,0,0,1,1,1,1]
 k_list = []
@@ -41,7 +44,4 @@ for i in range(10000):
     k_list.append(k)
     s = b
 
-plt.plot(k_list)
-plt.show()
-plt.plot(k_list[0:60])
-plt.show()
+histogram(k_list)
