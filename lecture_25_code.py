@@ -1,6 +1,7 @@
 import math
+import numpy as np
 
-table51 = [12423,11524,7243,7459,14303,6127,10964,16399,
+table51=[12423,11524,7243,7459,14303,6127,10964,16399,
 			9792,13629,14407,18817,18830,13556,3159,16647,
 			5300,13951,81,8986,8007,13167,10022,17213,2264,
 			961,17459,4101,2999,14569,17183,15827,12693,
@@ -107,3 +108,43 @@ table52d = RSA_Decrypt(table52,31313,4913)
 print(table51d)
 #Table 5.2 decrypt
 print(table52d)
+
+
+##Chinese Remainder Theorem
+
+matrix = [[5, 7],[3, 11],[10, 13]]
+
+def CRT(matrix):
+    n = len(matrix)
+    M = np.product([x[1] for x in matrix])
+    t = 0
+    m = []
+    z = []
+    for x in range(n):
+        m.append(M/matrix[x][1])
+        w = ExtendedEuclidean(matrix[x][1],m[x])
+        z.append(w[2])
+        t = t + z[x] * m[x] * matrix[x][0]
+    return t % M
+
+CRT(matrix)
+print(CRT(matrix) % 7)
+print(CRT(matrix) % 11)
+print(CRT(matrix) % 13)
+
+
+#Use CRT to speed up RSA encryption
+
+x = 2398
+b = 1261
+n = 18923
+
+SquareAndMultiply(x, b, n)
+factor(n)
+p = factor(n)[0]
+q = factor(n)[1]
+bp = b % (p-1)
+bq = b % (q-1)
+xp = SquareAndMultiply(x,bp,p)
+xq = SquareAndMultiply(x,bq,q)
+CRT([[xp, p],[xq, q]])
