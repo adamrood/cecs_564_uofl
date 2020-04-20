@@ -84,7 +84,7 @@ def RSA_Decrypt(list_in, n, b):
     l = len(list_in)
     y = []
     for x in range(l):
-        if(list_char[x] != ''):
+        if(list_in[x] != ''):
             y.append(SquareAndMultiply(int(list_in[x]),a,n))
     output = []
     for x in range(len(y)):
@@ -109,7 +109,6 @@ print(table51d)
 #Table 5.2 decrypt
 print(table52d)
 
-
 ##Chinese Remainder Theorem
 
 matrix = [[5, 7],[3, 11],[10, 13]]
@@ -118,8 +117,7 @@ def CRT(matrix):
     n = len(matrix)
     M = np.product([x[1] for x in matrix])
     t = 0
-    m = []
-    z = []
+    m, z = [], []
     for x in range(n):
         m.append(M/matrix[x][1])
         w = ExtendedEuclidean(matrix[x][1],m[x])
@@ -131,7 +129,6 @@ CRT(matrix)
 print(CRT(matrix) % 7)
 print(CRT(matrix) % 11)
 print(CRT(matrix) % 13)
-
 
 #Use CRT to speed up RSA encryption
 
